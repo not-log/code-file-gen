@@ -4,7 +4,7 @@ const path = require("path");
 
 require("dotenv").config();
 
-const ignoredDirs = ["node_modules", "build"];
+const ignoredDirs = ["node_modules", "build", ".git"];
 const excludedFiles = [];
 const filesContent = [];
 
@@ -26,12 +26,13 @@ if (files) {
 }
 
 console.log("done");
+console.log("total files", files?.length);
 console.log("excluded binary files", excludedFiles.length);
 console.log("files with content", filesContent.length);
 
 /**
  * @param {string} dirPath 
- * @param {*} arrayOfFiles 
+ * @param {string[]} arrayOfFiles 
  * @returns 
  */
 function getDirFiles(dirPath, arrayOfFiles = []) {
@@ -42,7 +43,7 @@ function getDirFiles(dirPath, arrayOfFiles = []) {
 
   if (isIgnoredDirectory) {
     const lastPathPart = dirPath.split('/').at(-1);
-    console.warn("ignoring", dirPath, ', match:', lastPathPart);
+    console.warn("ignoring", dirPath, '| match:', lastPathPart);
     return;
   }
 
@@ -52,8 +53,9 @@ function getDirFiles(dirPath, arrayOfFiles = []) {
     const stat = fs.statSync(dirPath + "/" + file);
 
     if (stat.isDirectory()) {
-      arrayOfFiles = getDirFiles(dirPath + "/" + file, arrayOfFiles) || [];
+      getDirFiles(dirPath + "/" + file, arrayOfFiles) || [];
     } else {
+      // заполнение глобального массива при обнаружении файла
       arrayOfFiles.push(path.join(dirPath, "/", file));
     }
   });
