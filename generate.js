@@ -29,9 +29,20 @@ console.log("done");
 console.log("excluded binary files", excludedFiles.length);
 console.log("files with content", filesContent.length);
 
+/**
+ * @param {string} dirPath 
+ * @param {*} arrayOfFiles 
+ * @returns 
+ */
 function getDirFiles(dirPath, arrayOfFiles = []) {
-  if (ignoredDirs.some((ignoredDir) => dirPath.includes(ignoredDir))) {
-    console.warn("ignoring", dirPath);
+  const isIgnoredDirectory = ignoredDirs.some((ignoredDir) => {
+    const lastPathPart = dirPath.split('/').at(-1);
+    return lastPathPart === ignoredDir;
+  });
+
+  if (isIgnoredDirectory) {
+    const lastPathPart = dirPath.split('/').at(-1);
+    console.warn("ignoring", dirPath, ', match:', lastPathPart);
     return;
   }
 
