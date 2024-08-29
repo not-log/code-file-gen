@@ -4,7 +4,7 @@ const path = require("path");
 
 require("dotenv").config();
 
-const ignoredDirs = ["node_modules", "build", ".git"];
+const ignoredDirs = ["node_modules", "build", "dist", ".git"];
 const excludedFiles = [];
 const filesContent = [];
 
